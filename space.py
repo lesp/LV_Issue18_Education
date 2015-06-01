@@ -1,6 +1,13 @@
 import pygame
 import easygui as eg
 from time import sleep
+import RPi.GPIO as GPIO
+
+GPIO.setmode(GPIO.BCM)
+
+GPIO.setup(14, GPIO.IN, GPIO.PUD_UP)
+GPIO.setup(15, GPIO.IN, GPIO.PUD_UP)
+GPIO.setup(18, GPIO.IN, GPIO.PUD_UP)
 
 pygame.init()
 
@@ -74,9 +81,9 @@ try:
         choices = ["Pioneering Space","ISS","Mars","Exit"]
         selection = 'Blank'
         selection = eg.buttonbox(title="Movie Player", msg="Choose a movie",choices=(choices))
-        if selection == 'Pioneering Space':    
-            player('./Pioneering.mpg')
+        if selection == 'Pioneering Space':
             selection = 'Blank'
+            player('./Pioneering.mpg')
             #break
         elif selection == 'ISS':
             picture_with_audio('./iss.jpg',640,421,'./eva.mp3')
