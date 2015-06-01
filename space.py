@@ -26,7 +26,7 @@ def player(vid):
         pygame.display.update()
         clock.tick(FPS)
 
-    #pygame.quit()
+    pygame.quit()
 
 def picture(img,w,h):
     pic = pygame.image.load(img)
@@ -35,11 +35,9 @@ def picture(img,w,h):
     screen.fill((background))
     screen.blit(pic,(0,0))
     pygame.display.flip()
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.display.quit()
-                pygame.quit()
+    sleep(10)
+    pygame.display.quit()
+    pygame.quit()
         
 
 def picture_with_audio(img,w,h,audio):
@@ -56,11 +54,13 @@ def picture_with_audio(img,w,h,audio):
     info3 = myfont.render("Its first component launched into orbit in 1998,",1,(0,255,0))
     info4 = myfont.render("the ISS is now the largest artificial body in orbit and can often be ",1,(0,255,0))
     info5 = myfont.render("seen with the naked eye from Earth.",1,(0,255,0))
+    info6 = myfont.render("Source: Wikipedia.org",1,(0,0,255))
     screen.blit(info1, (0,0))
-    screen.blit(info2, (0,10))
-    screen.blit(info3, (0,20))
-    screen.blit(info4, (0,30))
-    screen.blit(info5, (0,40))
+    screen.blit(info2, (0,20))
+    screen.blit(info3, (0,40))
+    screen.blit(info4, (0,60))
+    screen.blit(info5, (0,80))
+    screen.blit(info6, (0,100))
     pygame.display.flip()
     sleep(10)
     screen.blit(pic,(0,0))
@@ -72,11 +72,12 @@ def picture_with_audio(img,w,h,audio):
 try:
     while True:
         choices = ["Pioneering Space","ISS","Mars","Exit"]
+        selection = 'Blank'
         selection = eg.buttonbox(title="Movie Player", msg="Choose a movie",choices=(choices))
         if selection == 'Pioneering Space':    
             player('./Pioneering.mpg')
-            #selection = 'Blank'
-            break
+            selection = 'Blank'
+            #break
         elif selection == 'ISS':
             picture_with_audio('./iss.jpg',640,421,'./eva.mp3')
             #selection = 'Blank'
@@ -84,9 +85,10 @@ try:
         elif selection == 'Mars':
             picture('./mars.jpg', 1280,720)
             #selection = 'Blank'
-            break
-            
-        #else:
             #break
+        elif selection == 'Exit':
+            break
+        else:
+            selection = eg.buttonbox(title="Movie Player", msg="Choose a movie",choices=(choices))
 except KeyboardInterrupt:
     exit()
