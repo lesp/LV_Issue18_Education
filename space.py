@@ -1,28 +1,16 @@
 import pygame
-import easygui as eg
+import os, sys
 from time import sleep
+import RPi.GPIO as GPIO
 
-def player(vid):
-    pygame.init()
-    FPS = 60
-    clock = pygame.time.Clock()
-    pygame.mixer.quit()
-    movie = pygame.movie.Movie(vid)
-    screen = pygame.display.set_mode(movie.get_size())
-    movie_screen = pygame.Surface(movie.get_size()).convert()
-    movie.set_volume(1.0)
-    movie.set_display(movie_screen)
-    movie.play()
-    playing = True
-    while playing:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                movie.stop()
-                #pygame.display.quit()
-                playing = False
-        screen.blit(movie_screen,(0,0))
-        pygame.display.update()
-        clock.tick(FPS)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(14, GPIO.IN, GPIO.PUD_UP)
+GPIO.setup(15, GPIO.IN, GPIO.PUD_UP)
+GPIO.setup(18, GPIO.IN, GPIO.PUD_UP)
+
+
+def player():
+    os.system('omxplayer -o local Pioneering.mp4')
     
 def picture(img,w,h):
     pic = pygame.image.load(img)
@@ -37,13 +25,14 @@ def picture(img,w,h):
 
 def picture_with_audio(img,w,h,audio):
     pygame.mixer.init()
+    pygame.font.init()
     pygame.mixer.music.load(audio)
     pygame.mixer.music.play(1)
     screen = pygame.display.set_mode((w,h))
     pic = pygame.image.load(img).convert()
     background = (0, 0, 0)
     screen.fill((background))
-    myfont = pygame.font.SysFont("monospace", 15)
+    myfont = pygame.font.Font(None, 15)
     info1 = myfont.render("The International Space Station (ISS) is a space station,",1,(0,255,0))
     info2 = myfont.render("or a habitable artificial satellite, in low Earth orbit.",1,(0,255,0))
     info3 = myfont.render("Its first component launched into orbit in 1998,",1,(0,255,0))
@@ -65,16 +54,16 @@ def picture_with_audio(img,w,h,audio):
     pygame.mixer.music.stop()
 
 while True: 
-    choices = ["Pioneering Space","ISS","Mars","Exit"]
-    selection = 'Blank'
-    selection = eg.buttonbox(title="Movie Player", msg="Choose a movie",choices=(choices))
-    if selection == 'Pioneering Space':
-        player('./Pioneering.mpg')
-    elif selection == 'ISS':
+    #choices = ["Pioneering Space","ISS","Mars","Exit"]
+    #selection = 'Blank'
+    #selection = eg.buttonbox(title="Movie Player", msg="Choose a movie",choices=(choices))
+    if GPIO.input(14) == False:
+        player()
+    elif GPIO.input(15) == False:
         print("ISS Chosen")
         picture_with_audio('./iss.jpg',640,421,'./eva.mp3')
-    elif selection == 'Mars':
+    elif GPIO.input(18) == False:
         picture('./mars.jpg', 1280,720)
-    elif selection == 'Exit':
-        break
+    #elif selection == 'Exit':
+        #break
 pygame.quit()
