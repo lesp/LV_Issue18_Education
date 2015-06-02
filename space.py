@@ -54,9 +54,6 @@ def picture_with_audio(img,w,h,audio):
     pygame.mixer.music.stop()
 
 while True: 
-    #choices = ["Pioneering Space","ISS","Mars","Exit"]
-    #selection = 'Blank'
-    #selection = eg.buttonbox(title="Movie Player", msg="Choose a movie",choices=(choices))
     if GPIO.input(14) == False:
         player()
     elif GPIO.input(15) == False:
@@ -64,6 +61,4 @@ while True:
         picture_with_audio('./iss.jpg',640,421,'./eva.mp3')
     elif GPIO.input(18) == False:
         picture('./mars.jpg', 1280,720)
-    #elif selection == 'Exit':
-        #break
 pygame.quit()
